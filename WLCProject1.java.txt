@@ -1,0 +1,102 @@
+import javax.microedition.midlet.*;
+import javax.microedition.lcdui.*;
+import java.io.*;
+import javax.microedition.io.*;
+import java.util.*;
+import java.lang.*;
+ 
+public class WLCProject extends MIDlet implements CommandListener{
+    private Command exitCommand,goCommand,backCommand;
+    private Display display;
+    private Form screen1;
+    private List list;
+    private DrawCircle circle;
+    public  TextField tf1;
+    public int r;
+    public static int listItemIndex;
+        
+    public WLCProject(){
+        
+        //circle = new drawCircle(tf1); 
+        display = Display.getDisplay(this);
+        exitCommand = new Command("Exit",Command.EXIT,2);
+        goCommand = new Command("Draw",Command.OK,2);
+        // backCommand = new Command("Back",Command.BACK,1);
+                   
+         list = new List("Menu Selection", List.IMPLICIT);
+         list.append("Enter URL", null);
+         list.append("Draw Rounded Rectangle", null);
+         list.append("Draw Circle", null);
+         list.append("Calculate Float Sum", null);
+         
+          
+        list.addCommand(exitCommand);
+        list.addCommand(goCommand);
+        //list.addCommand(backCommand);
+        list.setCommandListener(this);
+        
+         screen1 = new Form("Circle Drawing");
+         
+         tf1 = new TextField("Enter circle radius","100",50,0);
+         screen1.append(tf1);
+           
+          
+         //screen2 = new Form("circle");
+         }
+
+    public void startApp() throws MIDletStateChangeException {
+        display.setCurrent(list);
+    }
+    
+    public void pauseApp() {
+    }
+    
+    public void destroyApp(boolean unconditional) {
+        //notifyDestroyed ();
+    }
+    public void commandAction(Command c,Displayable d){
+        listItemIndex = list.getSelectedIndex();
+        if(c == exitCommand){
+            destroyApp(false);
+            notifyDestroyed();
+        }
+       if( c == goCommand ) {
+          screen1.addCommand(goCommand);
+            r=Integer.parseInt(tf1.getString());
+          circle = new DrawCircle(r,listItemIndex);
+          
+        display.setCurrent(circle);
+         screen1.setCommandListener(this);
+        }
+     /* if( d == screen1) {
+            display.setCurrent(circle);
+             screen1.setCommandListener(this);
+        }*/
+        /*if(c == backCommand){
+            screen1.setCommandListener(this);
+        }*/
+      
+    }
+    
+}
+class  DrawCircle extends Canvas {
+      int radius=0;
+     //Command back;
+      int i;
+       public DrawCircle(int r,int selectedIndex){
+           radius=r;
+           i=selectedIndex;
+          // back = new Command("Back",Command.BACK,1);
+           //addCommand(back);
+           //setCommandListener(this);
+       }
+        public void paint(Graphics g){
+            g.setColor(0, 0, 255);
+            g.fillRect(0,0, getWidth (), getHeight ());
+            g.setColor(255, 0, 0);
+            if(i == 2){
+            g.setColor(255,255,255);
+            g.drawArc(getWidth()/2,getHeight()/2,radius,radius,0,360);
+            }
+        }
+}
